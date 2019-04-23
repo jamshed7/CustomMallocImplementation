@@ -133,14 +133,19 @@ struct _block *findFreeBlock(struct _block **last, size_t size)
 
 
 #if defined NEXT && NEXT == 0
-   printf("TODO: Implement next fit here\n");
+   //printf("TODO: Implement next fit here\n");
+   struct _block *next_block;
 
-
-
-
-
-
-
+   if( next_block != NULL)
+   {
+     curr = next_block;
+   }
+   while( curr && !(curr->free && curr->size >= size) )
+   {
+     *last = curr;
+     curr = curr->next;
+   }
+   next_block = curr;
 #endif
 
    return curr;
