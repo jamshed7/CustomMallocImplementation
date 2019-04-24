@@ -175,7 +175,15 @@ void *malloc(size_t size)
    struct _block *next = findFreeBlock(&last, size);
 
    /* TODO: Split free _block if possible */
-
+   if(next->next = NULL && next->size > size){
+      num_grows += 1;
+      num_splits += 1;
+      size_t extraBlockSize = next->size - size;
+      struct block *extraSplitBlock = (struct block *)(sbrk(sizeof(struct _block) + extraBlockSize));
+      if(next->next == NULL){
+         extraSplitBlock->next = NULL;
+      }
+   }
    /* Could not find free _block, so grow heap */
    if (next == NULL) 
    {
