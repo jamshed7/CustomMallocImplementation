@@ -19,6 +19,7 @@ static int num_blocks = 0;
 static int num_requested = 0;
 static int max_heap = 0;
 
+
 /*
  *  \brief printStatistics
  *
@@ -52,7 +53,7 @@ struct _block
 };
 
 struct _block *freeList = NULL; /* Free list to track the _blocks available */
-
+struct _block *next_fit_store;
 /*
  * \brief findFreeBlock
  *
@@ -126,20 +127,17 @@ struct _block *findFreeBlock(struct _block **last, size_t size)
    }
 #endif
 
+
+
 #if defined NEXT && NEXT == 0
    //printf("TODO: Implement next fit here\n");
-   struct _block *next_block;
-
-   if (next_block != NULL)
-   {
-      curr = next_block;
-   }
-   while (curr && !(curr->free && curr->size >= size))
+   if(next_fit_store != NULL) curr = next_fit_store;
+   while (curr && !(curr->free && curr->size >= size)) 
    {
       *last = curr;
-      curr = curr->next;
+      curr  = curr->next;
    }
-   next_block = curr;
+   next_fit_store = curr;
 #endif
 
    return curr;
