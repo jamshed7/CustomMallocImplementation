@@ -53,7 +53,7 @@ struct _block
 };
 
 struct _block *freeList = NULL; /* Free list to track the _blocks available */
-struct _block *next_fit_store;//this must be set to NULL
+struct _block *next_fit_store = NULL;//this must be set to NULL
 /*
  * \brief findFreeBlock
  *
