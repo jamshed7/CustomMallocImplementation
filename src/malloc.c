@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define ALIGN4(s) (((((s)-1) >> 2) << 2) + 4)
 #define BLOCK_DATA(b) ((b) + 1)
@@ -265,6 +266,13 @@ void *malloc(size_t size)
 void *calloc(size_t nmemb, size_t size)
 {
    return malloc(nmemb * size);
+}
+
+void *realloc(void *ptr, size_t size){
+   struct _block *new_ptr = malloc(size);
+   memcpy(new_ptr,ptr,size);
+   free(ptr);
+   return new_ptr;  
 }
 
 /*
