@@ -19,7 +19,6 @@ static int num_blocks = 0;
 static int num_requested = 0;
 static int max_heap = 0;
 
-
 /*
  *  \brief printStatistics
  *
@@ -104,38 +103,35 @@ struct _block *findFreeBlock(struct _block **last, size_t size)
 #endif
 
 #if defined WORST && WORST == 0
-   //printf("TODO: Implement worst fit here\n");
-   //curr->next = freeList; //may be redundant, check later
-   while (curr->next)
+   struct _block *worst_fit = freeList;
+   while (worst_fit)
    {
-      if (curr->next->free && curr->next->size >= size && curr->next->size > curr->size)
+      if (worst_fit->free && worst_fit->size >= size && worst_fit->size > curr->size)
+      {
+         *last = curr = worst_fit;
+      }
+      else if (!(curr->free) && (worst_fit->next == NULL))
       {
          *last = curr->next;
-         curr = curr->next;
+         curr = worst_fit->next;
       }
-      else if (!(curr->free) && (curr->next->next == NULL))
-      {
-         *last = curr->next;
-         curr = curr->next->next;
-      }
-      curr->next = curr->next->next;
+      worst_fit = worst_fit->next;
    }
 
    if (curr != NULL && !(curr->free))
    {
-      curr = curr->next->next;
+      curr = worst_fit->next;
    }
 #endif
 
-
-
 #if defined NEXT && NEXT == 0
    //printf("TODO: Implement next fit here\n");
-   if(next_fit_store != NULL) curr = next_fit_store;
-   while (curr && !(curr->free && curr->size >= size)) 
+   if (next_fit_store != NULL)
+      curr = next_fit_store;
+   while (curr && !(curr->free && curr->size >= size))
    {
       *last = curr;
-      curr  = curr->next;
+      curr = curr->next;
    }
    next_fit_store = curr;
 #endif
@@ -263,6 +259,11 @@ void *malloc(size_t size)
 
    /* Return data address associated with _block */
    return BLOCK_DATA(next);
+}
+
+void *calloc(size_t nmemb, size_t size)
+{
+   return malloc(nmemb * size);
 }
 
 /*
