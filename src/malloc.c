@@ -240,9 +240,9 @@ void *malloc(size_t size)
       struct _block *new_block = (struct _block *)sbrk(sizeof(struct _block) + diff);
       new_block->next = next->next == NULL ? NULL : next->next;
       next->next = new_block;
+      num_blocks += 1;
       new_block->size = diff;
       new_block->free = true;
-      num_blocks += 1;
    }
 
    /* Could not find free _block, so grow heap */
@@ -273,7 +273,9 @@ void *malloc(size_t size)
 
 void *calloc(size_t nmemb, size_t size)
 {
-   return malloc(nmemb * size);
+   struct _block *ptr = malloc(nmemb * size);
+   memset(ptr, 0, sizeof(ptr));
+   return ptr;
 }
 
 void *realloc(void *ptr, size_t size){
